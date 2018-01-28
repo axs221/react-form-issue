@@ -1,21 +1,30 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import {Field, reduxForm, formValueSelector} from "redux-form";
+import {connect} from "react-redux";
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
-}
+let TestForm = props => {
+  console.warn("ZZZZ App.js", "props.values", props.values)
+  const {handleSubmit} = props;
+  return (
+    <form onSubmit={handleSubmit}>
+      <Field name="firstName" component="input" type="text" />
+      Test
+    </form>
+  );
+};
 
-export default App;
+const selector = formValueSelector("test-form");
+
+TestForm = connect(state => {
+  return {
+    values: {
+      firstName: selector(state, "firstName")
+    }
+  };
+})(TestForm);
+
+TestForm = reduxForm({
+  form: "test-form",
+})(TestForm);
+
+export default TestForm;
